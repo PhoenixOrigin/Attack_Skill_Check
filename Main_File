@@ -9,20 +9,20 @@ int seconds;
 
 void tutorial();
 int playGame(int Rand[], int points);
-void clearConsole();
-void showTable(int Rand);
+void clearConsole(); // Function to clear the console
+void showTable(int Rand[]);
 
 int main() {
     char R11;
-    int Rand[9];
-    int points = 0;
+    int Rand[9]; // Array to store the random numbers
+    int points = 0; // Variable to keep track of points
 
-    srand(time(NULL));
+    srand(time(NULL)); // Seed the random number generator
 
-    tutorial();
+    tutorial(); // Display tutorial and difficulty selection once at the beginning
 
     do {
-        printf("\n");
+        printf("\n"); // Add newline for separation
 
         printf("Difficulty? [0 to 4] -> ");
         scanf("%d", &seconds);
@@ -36,16 +36,16 @@ int main() {
                 Rand[i] = rand() % (max_number - min_number + 1) + min_number;
             }
 
-            clearConsole();
+            clearConsole(); // Clear the console before playing
 
-            points = playGame(Rand, points);
+            points = playGame(Rand, points); // Pass the array of random numbers and the current points
         } else if (seconds == 0) {
             break;
         } else {
             printf("Invalid input. Please enter a valid difficulty (0 to 4).\n");
         }
 
-        printf("Points: %d\n", points);
+        printf("Points: %d\n", points); // Display points after each round
 
         printf("\nPlay again? [Y] [N]\n");
         scanf(" %c", &R11);
@@ -66,29 +66,35 @@ void tutorial() {
 
 int playGame(int Rand[], int points) {
     int timer = seconds;
-    int userAnswer;
+    int userAnswer; // Variable to store the user's answer
 
     while (timer >= 0) {
         int h = timer / 3600;
         int m = (timer % 3600) / 60;
         int s = timer % 60;
 
+        // Clear the console
         clearConsole();
 
+        // Display timer
         printf("Time Remaining: %02d:%02d:%02d\n", h, m, s);
 
+        // Show the table for the entire duration
         showTable(Rand);
 
         sleep(1);
         timer--;
     }
 
+    // Clear the console before asking the question
     clearConsole();
 
+    // Ask the user for the highest number
     printf("Time's up!\n");
     printf("What was the highest number?\n");
     scanf("%d", &userAnswer);
 
+    // Find the highest number and count its occurrences
     int highest = Rand[0];
     int highestCount = 1;
 
@@ -112,13 +118,14 @@ int playGame(int Rand[], int points) {
 
     sleep(2);
 
-    return points;
+    return points; // Return the updated points
 }
 
 void showTable(int Rand[]) {
     for (int i = 0; i < 9; i++) {
         printf("[%d] ", Rand[i]);
 
+        // Print newline after every third number
         if ((i + 1) % 3 == 0) {
             printf("\n");
         }
@@ -126,5 +133,6 @@ void showTable(int Rand[]) {
 }
 
 void clearConsole() {
+    // Use the clear command to clear the console
     system("clear");
 }
