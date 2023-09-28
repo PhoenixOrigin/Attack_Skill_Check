@@ -1,139 +1,130 @@
-//Dont bully my code too much
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 int min_number;
 int max_number;
 int seconds;
-int R10 = 0;
-int i = 0;
-int R13;
-int R14;
 
-int main(){
-    
-    printf("Dificulty? [0 to 4] ->");
-    scanf("%d", &R14);
-    if(R14 == 1){
-        printf("Df. 1\n");
-        max_number = 100;
-        min_number = 10;
-        seconds = 10;
-        rng_register();
-    } else if (R14 == 2){
-        printf("Df. 2\n");
-        max_number = 1000;
-        min_number = 10;
-        seconds = 7;
-        rng_register();
-    } else if (R14 == 3){
-        printf("Df. 3\n");
-        max_number = 10000;
-        min_number = 100;
-        seconds = 5;
-        rng_register();
-    } else if (R14 == 4){
-        printf("Df. 4\n");
-        max_number = 100000;
-        min_number = 10000;
-        seconds = 3;
-        rng_register();
-    } else if (R14 == 0) {
-        printf("Tutorial\n");
-        tutorial();
-    }
-    else {
-        printf("Code not working or give valid int.");
-    }
+void tutorial();
+int playGame(int Rand[], int points);
+void clearConsole();
+void showTable(int Rand);
+
+int main() {
+    char R11;
+    int Rand[9];
+    int points = 0;
+
+    srand(time(NULL));
+
+    tutorial();
+
+    do {
+        printf("\n");
+
+        printf("Difficulty? [0 to 4] -> ");
+        scanf("%d", &seconds);
+
+        if (seconds >= 1 && seconds <= 4) {
+            max_number = seconds == 1 ? 100 : (seconds == 2 ? 1000 : (seconds == 3 ? 10000 : 100000));
+            min_number = seconds <= 2 ? 10 : (seconds <= 3 ? 100 : 10000);
+            seconds = seconds == 4 ? 3 : (seconds == 3 ? 5 : (seconds == 2 ? 7 : 10));
+
+            for (int i = 0; i < 9; i++) {
+                Rand[i] = rand() % (max_number - min_number + 1) + min_number;
+            }
+
+            clearConsole();
+
+            points = playGame(Rand, points);
+        } else if (seconds == 0) {
+            break;
+        } else {
+            printf("Invalid input. Please enter a valid difficulty (0 to 4).\n");
+        }
+
+        printf("Points: %d\n", points);
+
+        printf("\nPlay again? [Y] [N]\n");
+        scanf(" %c", &R11);
+
+    } while (R11 == 'Y' || R11 == 'y');
+
     return 0;
-}    
+}
 
-void tutorial(){
-    printf("Heres what you should select when playing the game\n");
+void tutorial() {
+    printf("Here's what you should select when playing the game:\n");
     printf("[1] / [2] / [3]\n");
     printf("[4] / [5] / [6]\n");
     printf("[7] / [8] / [9]\n");
-    printf("ELSE IF THE HIGHEST NUMBER APPEARS TWICE, SAY 0");
+    printf("If the highest number appears twice, enter 0\n");
+    sleep(2);
 }
 
-void rng_register(){
-    printf("Whats the highest num?\n");
-    srand(time(NULL));
-    int Rand1, Rand2, Rand3, Rand4, Rand5, Rand6, Rand7, Rand8, Rand9, Rand10;
-    Rand1 = rand()% max_number + min_number;
-    Rand2 = rand()% max_number + min_number;
-    Rand3 = rand()% max_number + min_number;
-    Rand4 = rand()% max_number + min_number;
-    Rand5 = rand()% max_number + min_number;
-    Rand6 = rand()% max_number + min_number;
-    Rand7 = rand()% max_number + min_number;
-    Rand8 = rand()% max_number + min_number;
-    Rand9 = rand()% max_number + min_number;
-    printf("\n[%d] / [%d] / [%d]\n", Rand1, Rand2, Rand3);
-    printf("[%d] / [%d] / [%d]\n", Rand4, Rand5, Rand6);
-    printf("[%d] / [%d] / [%d]\n", Rand7, Rand8, Rand9);
-    while(seconds > 0){
-        int h = seconds / 3600;
-        int m = seconds / 60;
-        int s = seconds % 60;
-        printf("\r%02d:%02d:%02d", h, m, s);
-        printf("\r");
-        fflush(stdout);
-        clock_t stop = clock() + CLOCKS_PER_SEC;
-        while (clock() < stop) { }
-        seconds --;
-    } if (Rand1 > Rand2 && Rand1 > Rand3 && Rand1 > Rand4 && Rand1 > Rand5 && Rand1 > Rand6 && Rand1 > Rand7 && Rand1 > Rand8 && Rand1 > Rand9){
-        R10 = 1;
-    } else if (Rand2 > Rand1 && Rand2 > Rand4 && Rand2 > Rand5 && Rand2 > Rand6 && Rand2 > Rand7 && Rand2 > Rand8 && Rand2 > Rand9 && Rand2 > Rand3){
-        R10 = 2;
-    } else if (Rand3 > Rand2 && Rand3 > Rand1 && Rand3 > Rand4 && Rand3 > Rand5 && Rand3 > Rand6 && Rand3 > Rand7 && Rand3 > Rand8 && Rand3 > Rand9){
-        R10 = 3;
-    } else if (Rand4 > Rand2 && Rand4 > Rand3 && Rand4 > Rand1 && Rand4 > Rand5 && Rand4 > Rand6 && Rand4 > Rand7 && Rand4 > Rand8 && Rand4 > Rand9){
-        R10 = 4;
-    } else if (Rand5 > Rand2 && Rand5 > Rand3 && Rand5 > Rand4 && Rand5 > Rand1 && Rand5 > Rand6 && Rand5 > Rand7 && Rand5 > Rand8 && Rand5 > Rand9){
-        R10 = 5;
-    } else if (Rand6 > Rand2 && Rand6 > Rand3 && Rand6 > Rand4 && Rand6 > Rand5 && Rand6 > Rand1 && Rand6 > Rand7 && Rand6 > Rand8 && Rand6 > Rand9){
-        R10 = 6;
-    } else if (Rand7 > Rand2 && Rand7 > Rand3 && Rand7 > Rand4 && Rand7 > Rand5 && Rand7 > Rand6 && Rand7 > Rand1 && Rand7 > Rand8 && Rand7 > Rand9){
-        R10 = 7;
-    } else if (Rand8 > Rand1 && Rand8 > Rand3 && Rand8 > Rand4 && Rand8 > Rand5 && Rand8 > Rand6 && Rand8 > Rand7 && Rand8 > Rand1 && Rand8 > Rand9){
-        R10 = 8;
-    } else if (Rand9 > Rand2 && Rand9 > Rand3 && Rand9 > Rand4 && Rand9 > Rand5 && Rand9 > Rand6 && Rand9 > Rand7 && Rand9 > Rand8 && Rand9 > Rand1){
-        R10 = 9;
-    } else {
-        printf("\nDouble rand() int");
-    }
-    while(i < 10000){
-        printf("\n");
-        i++;
-    } 
-    printf("\nWhat was the highest number?\n");
-    printf("--->");
-    scanf("%d", &R13);
-    if (R13 == R10){ 
-        printf("Correct"); 
-    } else if (R13 == 0){
-        printf("0 Sellected, restarting program\n");
-        main();
-    } else if (R13 != R10){
-        printf("Not the right int");
-        printf("\nCorrect was %d", R10);
-    } else {
-        printf("Error");
-    }
-   char R11;
-    
-    printf("\nAgain? [Y] [N]\n");
-    scanf(" %c", &R11);
+int playGame(int Rand[], int points) {
+    int timer = seconds;
+    int userAnswer;
 
-    if (R11 == 'Y' || R11 == 'y') {
-        printf("Repeating...\n");
-        main();
-    } else if (R11 == 'N' || R11 == 'n') {
-        printf("Oke\n");
-    } else {
-        printf("Input a valid option (Y/N).\n");
+    while (timer >= 0) {
+        int h = timer / 3600;
+        int m = (timer % 3600) / 60;
+        int s = timer % 60;
+
+        clearConsole();
+
+        printf("Time Remaining: %02d:%02d:%02d\n", h, m, s);
+
+        showTable(Rand);
+
+        sleep(1);
+        timer--;
     }
+
+    clearConsole();
+
+    printf("Time's up!\n");
+    printf("What was the highest number?\n");
+    scanf("%d", &userAnswer);
+
+    int highest = Rand[0];
+    int highestCount = 1;
+
+    for (int i = 1; i < 9; i++) {
+        if (Rand[i] > highest) {
+            highest = Rand[i];
+            highestCount = 1;
+        } else if (Rand[i] == highest) {
+            highestCount++;
+        }
+    }
+
+    if (userAnswer == highest && highestCount == 1) {
+        printf("Correct!\n");
+        points++;
+    } else if (userAnswer == 0) {
+        printf("0 Selected, restarting game...\n");
+    } else {
+        printf("Incorrect. The correct answer was %d.\n", highest);
+    }
+
+    sleep(2);
+
+    return points;
+}
+
+void showTable(int Rand[]) {
+    for (int i = 0; i < 9; i++) {
+        printf("[%d] ", Rand[i]);
+
+        if ((i + 1) % 3 == 0) {
+            printf("\n");
+        }
+    }
+}
+
+void clearConsole() {
+    system("clear");
 }
